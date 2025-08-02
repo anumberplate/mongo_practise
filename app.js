@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express()
+const {ObjectId} = require('mongodb')
 const {connectToDb, getDb} = require('./db')
 
 let db
@@ -28,4 +29,16 @@ app.get('/books', (req, res) => {
       res.status(500).json({error: "Could not fetch documents"})
     })
 
+})
+
+app.get('/books/:id', (req, res) => {
+ 
+  db.collection('books')
+    .findOne({_id: new ObjectId(req.params.id)})
+    .then(doc => {
+      res.status(200).json(doc)
+    })
+    .catch(err=> {
+      res.status(500).json({error: "Could not fetch the documents"})
+    })
 })
